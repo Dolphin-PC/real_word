@@ -5,7 +5,7 @@ import 'package:real_word/widget/WordButton.dart';
 class CustomColumn extends StatelessWidget {
   const CustomColumn({Key? key, required this.word}) : super(key: key);
 
-  final CreatedWordType word;
+  final CreatedSingleWordType word;
 
   @override
   Widget build(BuildContext context) {

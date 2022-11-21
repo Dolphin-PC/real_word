@@ -7,7 +7,7 @@ import '../util/structure.dart';
 class WordButton extends StatefulWidget {
   WordButton({Key? key, required this.createdWordType}) : super(key: key);
 
-  final CreatedWordType createdWordType;
+  final CreatedSingleWordType createdWordType;
 
   @override
   State<WordButton> createState() => _WordButtonState();

@@ -1,10 +1,10 @@
-class CreatedWordType {
+class CreatedSingleWordType {
   late String _word;
   late EqaulType _equal;
   late bool _isClick;
   late bool _isCorrect;
 
-  CreatedWordType add(String word, int id, int sq) {
+  CreatedSingleWordType add(String word, int id, int sq) {
     _word = word;
     _equal = EqaulType(id, sq);
     _isClick = false;

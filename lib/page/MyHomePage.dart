@@ -15,25 +15,29 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<CreatedWordType> wordObjList = [];
+  List<dynamic> orgWordObjList = [];
+  List<CreatedSingleWordType> wordObjList = [];
   Util util = Util();
+  late WordProvider wordProvider;
 
   @override
   initState() {
     setState(() {
-      wordObjList = util.createWord(); // 단어 생성
+      orgWordObjList = util.getWordFromJson(); // 원본 데이터 get
+      wordObjList = util.createSingleWord(orgWordObjList); // 단어 쪼개서 생성하기
     });
   }
 
-  void shuffelWord() {
+  void shuffleWord() {
     setState(() {
       util.shuffle(wordObjList); // 단어 위치 변경
+      wordProvider.setCorrectWordList(orgWordObjList);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    int cnt = Provider.of<WordProvider>(context).getWordCnt();
+    wordProvider = Provider.of<WordProvider>(context, listen: true);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -58,7 +62,8 @@ class _MyHomePageState extends State<MyHomePage> {
             alignment: Alignment.center,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: util.renderText(wordObjList, cnt),
+              children:
+                  util.renderText(wordObjList, wordProvider.getSingleWordCnt()),
             ),
           ),
           Align(
@@ -69,12 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   FloatingActionButton(
-                    onPressed: util.createWord,
-                    tooltip: 'create word',
-                    child: const Icon(Icons.add),
-                  ),
-                  FloatingActionButton(
-                    onPressed: shuffelWord,
+                    onPressed: shuffleWord,
                     tooltip: 'shuffle word',
                     child: const Icon(Icons.shuffle),
                   ),

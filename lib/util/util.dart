@@ -6,25 +6,27 @@ import 'package:real_word/widget/CustomColumn.dart';
 import 'package:real_word/widget/CustomRow.dart';
 
 class Util {
-  final String jsonString = '{"key":[ "jake", "benn", "cart" ]}';
+  final String jsonString = '{"key":[ "aaaa", "benn", "cart" ]}';
 
-  List<CreatedWordType> createWord() {
-    List<CreatedWordType> wordObjList = [];
-
+  List<dynamic> getWordFromJson() {
     Map<String, dynamic> orgJson = jsonDecode(jsonString);
-    List<dynamic> orgWordJson = orgJson['key'];
+    return orgJson['key'];
+  }
+
+  List<CreatedSingleWordType> createSingleWord(List<dynamic> orgWordJson) {
+    List<CreatedSingleWordType> wordObjList = [];
 
     for (int i = 0; i < orgWordJson.length; i++) {
       String word = orgWordJson[i];
       for (int j = 0; j < word.split('').length; j++) {
-        wordObjList.add(CreatedWordType().add(word[j], i, j));
+        wordObjList.add(CreatedSingleWordType().add(word[j], i, j));
       }
     }
     return wordObjList;
   }
 
   List<CustomRow> renderText(
-    List<CreatedWordType> wordObjList,
+    List<CreatedSingleWordType> wordObjList,
     int columnCnt,
   ) {
     List<CustomRow> rowWidget = [];
