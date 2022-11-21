@@ -20,13 +20,25 @@ class _MyHomePageState extends State<MyHomePage> {
   Util util = Util();
   late WordProvider wordProvider;
 
-  @override
-  initState() {
+  void initState() {
+    super.initState();
     setState(() {
       orgWordObjList = util.getWordFromJson(); // 원본 데이터 get
       wordObjList = util.createSingleWord(orgWordObjList); // 단어 쪼개서 생성하기
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      util.shuffle(wordObjList); // 단어 위치 변경
+      wordProvider.setCorrectWordList(orgWordObjList);
+    });
   }
+  // @override
+  // initState() {
+  //   setState(() {
+  //     orgWordObjList = util.getWordFromJson(); // 원본 데이터 get
+  //     wordObjList = util.createSingleWord(orgWordObjList); // 단어 쪼개서 생성하기
+  //   });
+  // }
 
   void shuffleWord() {
     setState(() {
