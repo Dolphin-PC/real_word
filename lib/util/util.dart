@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:flutter/services.dart';
 import 'package:real_word/util/structure.dart';
 import 'package:real_word/widget/CustomColumn.dart';
 import 'package:real_word/widget/CustomRow.dart';
 
 class Util {
-  final String jsonString = '{"key":[ "aaaa", "benn", "cart" ]}';
-
-  List<dynamic> getWordFromJson() {
+  Future<List<dynamic>> getWordFromJson() async {
+    final String jsonString = await rootBundle.loadString('data/tdata.json');
     Map<String, dynamic> orgJson = jsonDecode(jsonString);
     return orgJson['key'];
   }

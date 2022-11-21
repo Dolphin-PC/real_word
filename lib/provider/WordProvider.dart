@@ -49,32 +49,9 @@ class WordProvider extends ChangeNotifier {
 
   bool checkCorrect() {
     String clickedWord = getClickedWordsString();
+    print(_correctWordList);
+    print(clickedWord);
     return _correctWordList.contains(clickedWord);
-  }
-
-  // instance 기준으로 동일 여부 판단 (=> single word가 같더라도, 다른 instance로 판단함)
-  bool _checkCorrect() {
-    bool isCorrect = true;
-    // late int firstId;
-    // for (int i = 0; i < _clickedWords.length; i++) {
-    //   CreatedWordType clickedWord = _clickedWords[i];
-    //   EqaulType equalObj = clickedWord.getEqualObj();
-    //
-    //   if (i == 0) firstId = equalObj.getId();
-    //
-    //   // 동일한 단어가 아닐경우,
-    //   if (firstId != equalObj.getId()) {
-    //     isCorrect = false;
-    //     break;
-    //   }
-    //
-    //   // 단어의 순서가 맞지 않을 경우,
-    //   if (i != equalObj.getSq()) {
-    //     isCorrect = false;
-    //     break;
-    //   }
-    // }
-    return isCorrect;
   }
 
   void clean() {

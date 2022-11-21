@@ -22,29 +22,21 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void initState() {
     super.initState();
-    setState(() {
-      orgWordObjList = util.getWordFromJson(); // 원본 데이터 get
-      wordObjList = util.createSingleWord(orgWordObjList); // 단어 쪼개서 생성하기
+
+    util.getWordFromJson().then((value) {
+      setState(() {
+        orgWordObjList = value;
+        wordObjList = util.createSingleWord(orgWordObjList); // 단어 쪼개서 생성하기
+
+        util.shuffle(wordObjList); // 단어 위치 변경
+        wordProvider.setCorrectWordList(orgWordObjList);
+      });
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      util.shuffle(wordObjList); // 단어 위치 변경
-      wordProvider.setCorrectWordList(orgWordObjList);
-    });
-  }
-  // @override
-  // initState() {
-  //   setState(() {
-  //     orgWordObjList = util.getWordFromJson(); // 원본 데이터 get
-  //     wordObjList = util.createSingleWord(orgWordObjList); // 단어 쪼개서 생성하기
-  //   });
-  // }
-
-  void shuffleWord() {
-    setState(() {
-      util.shuffle(wordObjList); // 단어 위치 변경
-      wordProvider.setCorrectWordList(orgWordObjList);
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   util.shuffle(wordObjList); // 단어 위치 변경
+    //   wordProvider.setCorrectWordList(orgWordObjList);
+    // });
   }
 
   @override
@@ -84,13 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  FloatingActionButton(
-                    onPressed: shuffleWord,
-                    tooltip: 'shuffle word',
-                    child: const Icon(Icons.shuffle),
-                  ),
-                ],
+                children: [],
               ),
             ),
           ),
