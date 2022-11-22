@@ -123,7 +123,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   Provider.of<WordProvider>(context)
                       .getClickedWordsString()
                       .toString(),
-                  style: const TextStyle(fontSize: 60),
+                  style: const TextStyle(
+                    fontFamily: 'ComicNeue',
+                    fontWeight: FontWeight.w900,
+                    fontSize: 60,
+                  ),
                 ),
               ),
             ),
