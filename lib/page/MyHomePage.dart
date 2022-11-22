@@ -29,16 +29,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void wordInit([wordKeyName = 'key_4']) {
-    void shuffle() {
-      Timer(Duration(seconds: 1), () {
-        setState(() {
-          // util.shuffle(singleWordObjList); // 단어 위치 변경
-          wordProvider.setCorrectWordList(wordObjList);
-          wordProvider.setSingleWordObjList(singleWordObjList);
-        });
-      });
-    }
-
     util.getWordFromJson(wordKeyName).then((dataList) {
       setState(() {
         wordObjList = dataList;
@@ -63,6 +53,16 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void shuffle() {
+    Timer(Duration(seconds: 1), () {
+      setState(() {
+        // util.shuffle(singleWordObjList); // 단어 위치 변경
+        wordProvider.setCorrectWordList(wordObjList);
+        wordProvider.setSingleWordObjList(singleWordObjList);
+      });
+    });
+  }
+
   void isAllCorrect() {
     if (wordProvider.isAllCorrect) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -79,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
               btnList: {
                 '재시도': () {
                   Navigator.of(context).pop();
-                  setState(() => wordProvider.retry());
+                  retry();
                 },
                 '다음': () {
                   Navigator.of(context).pop();
@@ -91,6 +91,13 @@ class _MyHomePageState extends State<MyHomePage> {
         );
       });
     }
+  }
+
+  void retry() {
+    setState(() {
+      wordProvider.retry();
+      shuffle();
+    });
   }
 
   void nextLevel() {
@@ -146,7 +153,13 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [],
+                children: [
+                  FloatingActionButton(
+                    onPressed: retry,
+                    tooltip: '재시도',
+                    child: const Icon(Icons.rotate_right),
+                  ),
+                ],
               ),
             ),
           ),

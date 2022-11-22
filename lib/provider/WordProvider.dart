@@ -54,6 +54,8 @@ class WordProvider extends ChangeNotifier {
 
   bool checkWordCorrect() {
     String clickedWord = getClickedWordsString();
+    print(_correctWordList);
+    print(clickedWord);
     return _correctWordList.contains(clickedWord);
   }
 
@@ -80,6 +82,8 @@ class WordProvider extends ChangeNotifier {
   }
 
   void retry() {
+    _clickedSingleWords = [];
+
     _correctCnt = 0;
     isWordCorrect = false;
     isAllCorrect = false;
@@ -91,6 +95,8 @@ class WordProvider extends ChangeNotifier {
   }
 
   void nextLevel() {
+    _clickedSingleWords = [];
+
     _correctCnt = 0;
     isWordCorrect = false;
     isAllCorrect = false;
