@@ -90,6 +90,12 @@ class WordProvider extends ChangeNotifier {
     }
   }
 
+  void nextLevel() {
+    _correctCnt = 0;
+    isWordCorrect = false;
+    isAllCorrect = false;
+  }
+
   void setSingleWordObjList(List<CreatedSingleWordType> singleWordObjList) {
     _singleWordObjInstanceList = singleWordObjList;
   }

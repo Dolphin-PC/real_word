@@ -25,7 +25,21 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void initState() {
     super.initState();
-    util.getWordFromJson('key_4').then((dataList) {
+    wordInit();
+  }
+
+  void wordInit([wordKeyName = 'key_4']) {
+    void shuffle() {
+      Timer(Duration(seconds: 1), () {
+        setState(() {
+          // util.shuffle(singleWordObjList); // 단어 위치 변경
+          wordProvider.setCorrectWordList(wordObjList);
+          wordProvider.setSingleWordObjList(singleWordObjList);
+        });
+      });
+    }
+
+    util.getWordFromJson(wordKeyName).then((dataList) {
       setState(() {
         wordObjList = dataList;
         singleWordObjList = util.createSingleWord(wordObjList); // 단어 쪼개서 생성하기
@@ -49,16 +63,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void shuffle() {
-    Timer(Duration(seconds: 1), () {
-      setState(() {
-        // util.shuffle(singleWordObjList); // 단어 위치 변경
-        wordProvider.setCorrectWordList(wordObjList);
-        wordProvider.setSingleWordObjList(singleWordObjList);
-      });
-    });
-  }
-
   void isAllCorrect() {
     if (wordProvider.isAllCorrect) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -77,8 +81,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.of(context).pop();
                   setState(() => wordProvider.retry());
                 },
-                '진행': () {
+                '다음': () {
                   Navigator.of(context).pop();
+                  nextLevel();
                 },
               },
             );
@@ -86,6 +91,11 @@ class _MyHomePageState extends State<MyHomePage> {
         );
       });
     }
+  }
+
+  void nextLevel() {
+    wordProvider.nextLevel();
+    wordInit();
   }
 
   @override
