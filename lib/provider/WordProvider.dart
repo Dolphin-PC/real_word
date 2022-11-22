@@ -4,21 +4,28 @@ import '../util/structure.dart';
 
 class WordProvider extends ChangeNotifier {
   List<dynamic> _correctWordList = [];
+  List<CreatedSingleWordType> _singleWordObjInstanceList = [];
   List<CreatedSingleWordType> _clickedSingleWords = [];
+
   int _singleWordCount = 4;
-  bool isCorrect = false;
+  int _correctCnt = 0;
+  bool isWordCorrect = false;
+  bool isAllCorrect = false;
 
   int getSingleWordCnt() => _singleWordCount;
-  void setSingleWordCnt(cnt) => _singleWordCount = cnt;
-  void setCorrectWordList(list) => _correctWordList = list;
-
   String getClickedWordsString() {
     if (_clickedSingleWords.isEmpty) return '';
     return _clickedSingleWords.map((_) => _.getWord()).join("");
   }
 
+  void setSingleWordCnt(cnt) => _singleWordCount = cnt;
+  void setCorrectWordList(list) {
+    print(list);
+    _correctWordList = list;
+  }
+
   void wordClick(CreatedSingleWordType wordObj) {
-    if (isAlreadyExists(wordObj)) {
+    if (isAlreadyClicked(wordObj)) {
       // 이미 클릭된 단어 빼기
       _clickedSingleWords.removeWhere((ele) => ele == wordObj);
     } else {
@@ -27,9 +34,7 @@ class WordProvider extends ChangeNotifier {
     }
 
     if (_singleWordCount == _clickedSingleWords.length) {
-      isCorrect = checkCorrect();
-
-      if (isCorrect) {
+      if (checkWordCorrect()) {
         correctFn();
       } else {
         inCorrectFn();
@@ -40,17 +45,15 @@ class WordProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool isAlreadyExists(CreatedSingleWordType newWordObj) {
+  bool isAlreadyClicked(CreatedSingleWordType newWordObj) {
     for (CreatedSingleWordType clickedWord in _clickedSingleWords) {
       if (clickedWord == newWordObj) return true;
     }
     return false;
   }
 
-  bool checkCorrect() {
+  bool checkWordCorrect() {
     String clickedWord = getClickedWordsString();
-    print(_correctWordList);
-    print(clickedWord);
     return _correctWordList.contains(clickedWord);
   }
 
@@ -63,6 +66,10 @@ class WordProvider extends ChangeNotifier {
     for (CreatedSingleWordType clickedWord in _clickedSingleWords) {
       clickedWord.setIsCorrect(true);
     }
+    _correctCnt++;
+    if (_correctCnt == _correctWordList.length) {
+      isAllCorrect = true;
+    }
   }
 
   void inCorrectFn() {
@@ -70,5 +77,20 @@ class WordProvider extends ChangeNotifier {
     for (CreatedSingleWordType clickedWord in _clickedSingleWords) {
       clickedWord.setIsClick(false);
     }
+  }
+
+  void retry() {
+    _correctCnt = 0;
+    isWordCorrect = false;
+    isAllCorrect = false;
+    for (CreatedSingleWordType singleWordObjInstance
+        in _singleWordObjInstanceList) {
+      singleWordObjInstance.setIsCorrect(false);
+      singleWordObjInstance.setIsClick(false);
+    }
+  }
+
+  void setSingleWordObjList(List<CreatedSingleWordType> singleWordObjList) {
+    _singleWordObjInstanceList = singleWordObjList;
   }
 }

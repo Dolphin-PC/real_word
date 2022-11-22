@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:real_word/provider/WordProvider.dart';
 import 'package:real_word/util/util.dart';
+import 'package:real_word/widget/CustomDialog.dart';
 
 import '../util/structure.dart';
 
@@ -15,36 +18,89 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<dynamic> orgWordObjList = [];
-  List<CreatedSingleWordType> wordObjList = [];
+  List<dynamic> wordObjList = [];
+  List<CreatedSingleWordType> singleWordObjList = [];
   Util util = Util();
   late WordProvider wordProvider;
 
   void initState() {
     super.initState();
-
-    util.getWordFromJson().then((value) {
+    util.getWordFromJson('key_4').then((dataList) {
       setState(() {
-        orgWordObjList = value;
-        wordObjList = util.createSingleWord(orgWordObjList); // 단어 쪼개서 생성하기
-
-        util.shuffle(wordObjList); // 단어 위치 변경
-        wordProvider.setCorrectWordList(orgWordObjList);
+        wordObjList = dataList;
+        singleWordObjList = util.createSingleWord(wordObjList); // 단어 쪼개서 생성하기
       });
+
+      shuffle();
     });
 
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   util.shuffle(wordObjList); // 단어 위치 변경
-    //   wordProvider.setCorrectWordList(orgWordObjList);
-    // });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // showDialog(
+      //   context: context,
+      //   builder: (BuildContext context) {
+      //     return CustomDialog(
+      //       context: context,
+      //       title: '',
+      //       msg: '3초 뒤에 단어가 섞입니다.',
+      //       fn: shuffle,
+      //     );
+      //   },
+      // );
+    });
+  }
+
+  void shuffle() {
+    Timer(Duration(seconds: 1), () {
+      setState(() {
+        // util.shuffle(singleWordObjList); // 단어 위치 변경
+        wordProvider.setCorrectWordList(wordObjList);
+        wordProvider.setSingleWordObjList(singleWordObjList);
+      });
+    });
+  }
+
+  void isAllCorrect() {
+    if (wordProvider.isAllCorrect) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            // return CustomDialog(context: context, title: 'dasd', msg: 'fdsf');
+            return CustomDialog(
+              context: context,
+              title: 'Stage Clear',
+              msg: '정답입니다!',
+              fn: () {},
+              btnList: {
+                '재시도': () {
+                  Navigator.of(context).pop();
+                  setState(() => wordProvider.retry());
+                },
+                '진행': () {
+                  Navigator.of(context).pop();
+                },
+              },
+            );
+          },
+        );
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     wordProvider = Provider.of<WordProvider>(context, listen: true);
+    isAllCorrect();
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        titleTextStyle: const TextStyle(
+          fontFamily: 'NotoSansKR',
+          fontWeight: FontWeight.w700,
+          fontSize: 32.0,
+          color: Colors.white,
+        ),
       ),
       body: Stack(
         children: [
@@ -66,8 +122,8 @@ class _MyHomePageState extends State<MyHomePage> {
             alignment: Alignment.center,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children:
-                  util.renderText(wordObjList, wordProvider.getSingleWordCnt()),
+              children: util.renderText(
+                  singleWordObjList, wordProvider.getSingleWordCnt()),
             ),
           ),
           Align(

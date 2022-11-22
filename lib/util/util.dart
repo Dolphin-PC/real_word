@@ -7,10 +7,47 @@ import 'package:real_word/widget/CustomColumn.dart';
 import 'package:real_word/widget/CustomRow.dart';
 
 class Util {
-  Future<List<dynamic>> getWordFromJson() async {
-    final String jsonString = await rootBundle.loadString('data/tdata.json');
+  Future<List<dynamic>> getWordFromJson(
+    String keyName, [
+    int wordCount = 4,
+  ]) async {
+    final String jsonString = await rootBundle.loadString('data/org_data.json');
     Map<String, dynamic> orgJson = jsonDecode(jsonString);
-    return orgJson['key'];
+
+    List<dynamic> dataJson = orgJson[keyName];
+    List<dynamic> resultDataList = getRandomDataList(dataJson, wordCount);
+    return resultDataList;
+  }
+
+  List<dynamic> getRandomDataList(List<dynamic> dataJson, int wordCount) {
+    int dataLen = dataJson.length;
+    if (dataLen < wordCount) return []; // 가지고 오려는 수보다 데이터 수가 적을 떄
+
+    List<dynamic> resultDataList = [];
+    Function getRandom = getRandomIdx(dataLen);
+    for (int i = 0; i < wordCount; i++) {
+      int rndIdx = getRandom();
+      resultDataList.add(dataJson[rndIdx]);
+    }
+    return resultDataList;
+  }
+
+  Function getRandomIdx(int dataLen) {
+    List<int> existsIdx = [];
+    int rndIdx;
+
+    return () {
+      while (true) {
+        rndIdx = Random().nextInt(dataLen);
+        if (existsIdx.contains(rndIdx)) {
+          continue;
+        } else {
+          existsIdx.add(rndIdx);
+          break;
+        }
+      }
+      return rndIdx;
+    };
   }
 
   List<CreatedSingleWordType> createSingleWord(List<dynamic> orgWordJson) {

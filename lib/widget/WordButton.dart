@@ -36,7 +36,13 @@ class _WordButtonState extends State<WordButton> {
               ? Colors.blueAccent
               : Colors.grey,
         ),
-        child: Text(widget.createdWordType.getWord()),
+        child: Text(
+          widget.createdWordType.getWord(),
+          style: const TextStyle(
+              fontFamily: 'ComicNeue',
+              fontWeight: FontWeight.w700,
+              fontSize: 24.0),
+        ),
       ),
     );
   }

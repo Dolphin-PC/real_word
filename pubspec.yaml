@@ -23,3 +23,30 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+  fonts:
+    - family: NotoSansKR
+      fonts:
+        - asset: assets/fonts/NotoSansKR-Thin.otf
+          weight: 100
+        - asset: assets/fonts/NotoSansKR-Light.otf
+          weight: 300
+        - asset: assets/fonts/NotoSansKR-Regular.otf
+          weight: 400
+        - asset: assets/fonts/NotoSansKR-Medium.otf
+          weight: 500
+        - asset: assets/fonts/NotoSansKR-Bold.otf
+          weight: 700
+        - asset: assets/fonts/NotoSansKR-Black.otf
+          weight: 900
+    - family: ComicNeue
+      fonts:
+        - asset: assets/fonts/ComicNeue-Light.ttf
+          weight: 300
+        - asset: assets/fonts/ComicNeue-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/ComicNeue-Bold.ttf
+          weight: 700
+
+flutter_test:
+  assets:
+    - assets/
