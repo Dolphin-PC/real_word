@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:real_word/page/MyHomePage.dart';
 import 'package:real_word/provider/WordProvider.dart';
+import 'package:real_word/util/util.dart';
 import 'package:real_word/widget/WrapScaffold.dart';
 
 class IndexPage extends StatefulWidget {
@@ -14,12 +15,19 @@ class IndexPage extends StatefulWidget {
 }
 
 class _IndexPageState extends State<IndexPage> {
-  List<int> wordKeyList = [3, 4, 5];
-  late int wordKeyValue;
+  Util util = Util();
+  List<String> wordKeyList = ['0'];
+  String wordKeyValue = '0';
 
   @override
   void initState() {
-    wordKeyValue = wordKeyList.first;
+    super.initState();
+    util.getWordKeyFromJson().then((value) {
+      setState(() {
+        wordKeyList = value;
+        wordKeyValue = wordKeyList.first;
+      });
+    });
   }
 
   @override
@@ -31,15 +39,15 @@ class _IndexPageState extends State<IndexPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            DropdownButton<int>(
+            DropdownButton<String>(
               value: wordKeyValue,
-              items: wordKeyList.map<DropdownMenuItem<int>>((int value) {
-                return DropdownMenuItem<int>(
+              items: wordKeyList.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
                   value: value,
                   child: Text('${value.toString()}단어'),
                 );
               }).toList(),
-              onChanged: (int? value) {
+              onChanged: (String? value) {
                 setState(() {
                   wordKeyValue = value!;
                 });
@@ -48,8 +56,7 @@ class _IndexPageState extends State<IndexPage> {
             ElevatedButton(
               child: Text('시작'),
               onPressed: () {
-                print(wordKeyValue);
-                wordProvider.setSingleWordCnt(wordKeyValue);
+                wordProvider.setSingleWordCnt(int.parse(wordKeyValue));
                 Navigator.pushNamed(
                   context,
                   MyHomePage.routeName,

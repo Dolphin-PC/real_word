@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:core';
 import 'dart:math';
 
 import 'package:flutter/services.dart';
@@ -17,6 +18,15 @@ class Util {
     List<dynamic> dataJson = orgJson[keyName];
     List<dynamic> resultDataList = getRandomDataList(dataJson, wordCount);
     return resultDataList;
+  }
+
+  Future<List<String>> getWordKeyFromJson() async {
+    final String jsonString =
+        await rootBundle.loadString('data/org_data_key_list.json');
+    List<String> orgJson =
+        (jsonDecode(jsonString) as List<dynamic>).cast<String>();
+
+    return orgJson;
   }
 
   List<dynamic> getRandomDataList(List<dynamic> dataJson, int wordCount) {
