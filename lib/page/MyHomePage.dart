@@ -11,6 +11,7 @@ import '../util/structure.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
+  static const routeName = '/home';
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -21,13 +22,19 @@ class _MyHomePageState extends State<MyHomePage> {
   List<CreatedSingleWordType> singleWordObjList = [];
   Util util = Util();
   late WordProvider wordProvider;
+  late var args;
 
+  @override
   void initState() {
     super.initState();
-    wordInit();
+
+    // build 때 까지 기다렸다가 1번만 실행
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      wordInit(args['wordKey'].toString());
+    });
   }
 
-  void wordInit([wordKeyName = 'key_4']) {
+  void wordInit([String wordKeyName = 'key_4']) {
     util.getWordFromJson(wordKeyName).then((dataList) {
       setState(() {
         wordObjList = dataList;
@@ -37,23 +44,21 @@ class _MyHomePageState extends State<MyHomePage> {
       shuffle();
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // showDialog(
-      //   context: context,
-      //   builder: (BuildContext context) {
-      //     return CustomDialog(
-      //       context: context,
-      //       title: '',
-      //       msg: '3초 뒤에 단어가 섞입니다.',
-      //       fn: shuffle,
-      //     );
-      //   },
-      // );
-    });
+    // showDialog(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return CustomDialog(
+    //       context: context,
+    //       title: '',
+    //       msg: '3초 뒤에 단어가 섞입니다.',
+    //       fn: shuffle,
+    //     );
+    //   },
+    // );
   }
 
   void shuffle() {
-    Timer(Duration(seconds: 1), () {
+    Timer(Duration(seconds: 0), () {
       setState(() {
         // util.shuffle(singleWordObjList); // 단어 위치 변경
         wordProvider.setCorrectWordList(wordObjList);
@@ -107,6 +112,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     wordProvider = Provider.of<WordProvider>(context, listen: true);
+    args = ModalRoute.of(context)!.settings.arguments;
+
     isAllCorrect();
     return WrapScaffold(
       body: Stack(

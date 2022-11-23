@@ -11,21 +11,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
-  @override
-  Widget _build(BuildContext context) {
-    return MaterialApp(
-      title: 'Real Word',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: ChangeNotifierProvider(
-        create: (_) => WordProvider(),
-        child: IndexPage(),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -37,8 +22,8 @@ class MyApp extends StatelessWidget {
           ),
           initialRoute: '/',
           routes: {
-            '/': (context) => IndexPage(),
-            '/home': (context) => MyHomePage(),
+            IndexPage.routeName: (context) => const IndexPage(),
+            MyHomePage.routeName: (context) => const MyHomePage(),
           },
         ));
   }
