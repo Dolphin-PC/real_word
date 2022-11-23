@@ -18,8 +18,8 @@ class WordProvider extends ChangeNotifier {
     return _clickedSingleWords.map((_) => _.getWord()).join("");
   }
 
-  void setSingleWordCnt(cnt) => _singleWordCount = cnt;
-  void setCorrectWordList(list) {
+  void setSingleWordCnt(int cnt) => _singleWordCount = cnt;
+  void setCorrectWordList(List<dynamic> list) {
     print(list);
     _correctWordList = list;
   }

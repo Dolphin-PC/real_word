@@ -30,11 +30,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // build 때 까지 기다렸다가 1번만 실행
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      wordInit(args['wordKey'].toString());
+      wordInit();
     });
   }
 
-  void wordInit([String wordKeyName = 'key_4']) {
+  void wordInit() {
+    String wordKeyName = 'key_${wordProvider.getSingleWordCnt()}';
     util.getWordFromJson(wordKeyName).then((dataList) {
       setState(() {
         wordObjList = dataList;
