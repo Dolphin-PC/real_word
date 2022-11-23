@@ -5,13 +5,12 @@ import 'package:provider/provider.dart';
 import 'package:real_word/provider/WordProvider.dart';
 import 'package:real_word/util/util.dart';
 import 'package:real_word/widget/CustomDialog.dart';
+import 'package:real_word/widget/WrapScaffold.dart';
 
 import '../util/structure.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -109,16 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     wordProvider = Provider.of<WordProvider>(context, listen: true);
     isAllCorrect();
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        titleTextStyle: const TextStyle(
-          fontFamily: 'NotoSansKR',
-          fontWeight: FontWeight.w700,
-          fontSize: 32.0,
-          color: Colors.white,
-        ),
-      ),
+    return WrapScaffold(
       body: Stack(
         children: [
           Align(
