@@ -9,7 +9,7 @@ class WordProvider extends ChangeNotifier {
   List<CreatedSingleWordType> _singleWordObjInstanceList = [];
   List<CreatedSingleWordType> _clickedSingleWords = [];
 
-  int _singleWordCount = 4;
+  int _singleWordCount = 0;
   int _correctCnt = 0;
   bool isWordCorrect = false;
   bool isAllCorrect = false;
@@ -118,5 +118,13 @@ class WordProvider extends ChangeNotifier {
   void initScore() async {
     correctScore = await util.getSharedData<int>('score') ?? 0;
     notifyListeners();
+  }
+
+  void initStage(List<dynamic> wordObjList,
+      List<CreatedSingleWordType> singleWordObjList) {
+    setCorrectWordList(wordObjList);
+    setSingleWordObjList(singleWordObjList);
+
+    retry();
   }
 }

@@ -62,8 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Timer(Duration(seconds: 0), () {
       setState(() {
         // util.shuffle(singleWordObjList); // 단어 위치 변경
-        wordProvider.setCorrectWordList(wordObjList);
-        wordProvider.setSingleWordObjList(singleWordObjList);
+        wordProvider.initStage(wordObjList, singleWordObjList);
       });
     });
   }
