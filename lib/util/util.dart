@@ -82,8 +82,10 @@ class Util {
         wrapWidget.add(WordButton(createdWordType: word));
       }
 
-      return Wrap(
-        children: wrapWidget,
+      return SingleChildScrollView(
+        child: Wrap(
+          children: wrapWidget,
+        ),
       );
     }
 

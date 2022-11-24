@@ -30,7 +30,6 @@ class _WordButtonState extends State<WordButton> {
 
     return Container(
       margin: const EdgeInsets.all(10),
-      alignment: Alignment.center,
       width: 50,
       height: 50,
       color: Colors.lightGreen[50],
@@ -52,7 +51,7 @@ class _WordButtonState extends State<WordButton> {
             style: const TextStyle(
                 fontFamily: 'ComicNeue',
                 fontWeight: FontWeight.w700,
-                fontSize: 24.0),
+                fontSize: 16.0),
           ),
         ),
       ),

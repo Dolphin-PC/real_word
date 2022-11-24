@@ -124,44 +124,38 @@ class _MyHomePageState extends State<MyHomePage> {
 
     wordProvider.isAllCorrect ? isAllCorrect() : null;
     return WrapScaffold(
-      body: Stack(
+      body: Column(
         children: [
-          Align(
-            alignment: Alignment.topCenter,
-            child: Container(
-              padding: const EdgeInsets.all(16.0),
-              child: Consumer<WordProvider>(
-                builder: (context, countProvider, child) => Text(
-                  Provider.of<WordProvider>(context)
-                      .getClickedWordsString()
-                      .toString(),
-                  style: const TextStyle(
-                    fontFamily: 'ComicNeue',
-                    fontWeight: FontWeight.w900,
-                    fontSize: 60,
-                  ),
+          Expanded(
+            flex: 1,
+            child: Consumer<WordProvider>(
+              builder: (context, countProvider, child) => Text(
+                Provider.of<WordProvider>(context)
+                    .getClickedWordsString()
+                    .toString(),
+                style: const TextStyle(
+                  fontFamily: 'ComicNeue',
+                  fontWeight: FontWeight.w900,
+                  fontSize: 60,
                 ),
               ),
             ),
           ),
-          Align(
-              alignment: Alignment.center,
+          Expanded(
+              flex: 5,
               child: util.renderWord(singleWordObjList,
                   wordProvider.getSingleWordCnt(), wordProvider.screenWidth)),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  FloatingActionButton(
-                    onPressed: retry,
-                    tooltip: '재시도',
-                    child: const Icon(Icons.rotate_right),
-                  ),
-                ],
-              ),
+          Expanded(
+            flex: 1,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                FloatingActionButton(
+                  onPressed: retry,
+                  tooltip: '재시도',
+                  child: const Icon(Icons.rotate_right),
+                ),
+              ],
             ),
           ),
         ],

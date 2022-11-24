@@ -49,31 +49,43 @@ class _IndexPageState extends State<IndexPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('내가 맞힌 단어 수 : ${wordProvider.correctScore}'),
-            DropdownButton<String>(
-              value: wordKeyValue,
-              items: wordKeyList.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text('${value.toString()}단어'),
-                );
-              }).toList(),
-              onChanged: (String? value) {
-                setState(() {
-                  wordKeyValue = value!;
-                });
-              },
+            Center(
+              child: Text('내가 맞힌 단어 수 : ${wordProvider.correctScore}'),
             ),
-            ElevatedButton(
-              child: Text('시작'),
-              onPressed: () {
-                wordProvider.setSingleWordCnt(int.parse(wordKeyValue));
-                Navigator.pushNamed(
-                  context,
-                  MyHomePage.routeName,
-                  arguments: {'wordKey': wordKeyValue},
-                );
-              },
+            Container(
+              padding: const EdgeInsets.all(32.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  DropdownButton<String>(
+                    isExpanded: true,
+                    value: wordKeyValue,
+                    items: wordKeyList
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text('${value.toString()}단어'),
+                      );
+                    }).toList(),
+                    onChanged: (String? value) {
+                      setState(() {
+                        wordKeyValue = value!;
+                      });
+                    },
+                  ),
+                  ElevatedButton(
+                    child: Text('시작'),
+                    onPressed: () {
+                      wordProvider.setSingleWordCnt(int.parse(wordKeyValue));
+                      Navigator.pushNamed(
+                        context,
+                        MyHomePage.routeName,
+                        arguments: {'wordKey': wordKeyValue},
+                      );
+                    },
+                  )
+                ],
+              ),
             ),
           ],
         ),
