@@ -7,14 +7,14 @@ import 'package:flutter/services.dart';
 import 'package:real_word/util/structure.dart';
 import 'package:real_word/widget/CustomColumn.dart';
 import 'package:real_word/widget/CustomRow.dart';
+import 'package:real_word/widget/WordButton.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Util {
-  Future<List<dynamic>> getWordFromJson(
-    String keyName, [
-    int wordCount = 4,
-  ]) async {
-    final String jsonString = await rootBundle.loadString('data/org_data.json');
+  Future<List<dynamic>> getWordFromJson(String keyName,
+      [int wordCount = 4]) async {
+    final String jsonString =
+        await rootBundle.loadString('assets/data/org_data.json');
     Map<String, dynamic> orgJson = jsonDecode(jsonString);
 
     List<dynamic> dataJson = orgJson[keyName];
@@ -24,7 +24,7 @@ class Util {
 
   Future<List<String>> getWordKeyFromJson() async {
     final String jsonString =
-        await rootBundle.loadString('data/org_data_key_list.json');
+        await rootBundle.loadString('assets/data/org_data_key_list.json');
     List<String> orgJson =
         (jsonDecode(jsonString) as List<dynamic>).cast<String>();
 
@@ -74,21 +74,45 @@ class Util {
     return wordObjList;
   }
 
-  List<CustomRow> renderText(
-    List<CreatedSingleWordType> wordObjList,
-    int columnCnt,
-  ) {
-    List<CustomRow> rowWidget = [];
-    List<CustomColumn> columnWidget = [];
-    for (int i = 0; i < wordObjList.length; i++) {
-      if (i % columnCnt == 0) {
-        rowWidget.add(CustomRow(column: columnWidget));
-        columnWidget = [];
+  Widget renderWord(List<CreatedSingleWordType> wordObjList, int columnCnt,
+      double screenWidth) {
+    Widget renderWrap() {
+      List<WordButton> wrapWidget = [];
+      for (CreatedSingleWordType word in wordObjList) {
+        wrapWidget.add(WordButton(createdWordType: word));
       }
-      columnWidget.add(CustomColumn(word: wordObjList[i]));
+
+      return Wrap(
+        children: wrapWidget,
+      );
     }
-    rowWidget.add(CustomRow(column: columnWidget));
-    return rowWidget;
+
+    Widget renderRow() {
+      List<CustomRow> rowWidget = [];
+      List<CustomColumn> columnWidget = [];
+      for (int i = 0; i < wordObjList.length; i++) {
+        if (i % columnCnt == 0) {
+          rowWidget.add(CustomRow(column: columnWidget));
+          columnWidget = [];
+        }
+        columnWidget.add(CustomColumn(word: wordObjList[i]));
+      }
+      rowWidget.add(CustomRow(column: columnWidget));
+
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: rowWidget,
+      );
+    }
+
+    Widget result;
+    if (screenWidth < columnCnt * 70.0) {
+      result = renderWrap();
+    } else {
+      result = renderRow();
+    }
+
+    return result;
   }
 
   void shuffle(List elements, [int start = 0, int? end, Random? random]) {
@@ -109,9 +133,7 @@ class Util {
     return prefs.containsKey(key);
   }
 
-  Future<T?> getSharedData<T>(
-    String key,
-  ) async {
+  Future<T?> getSharedData<T>(String key) async {
     final prefs = await SharedPreferences.getInstance();
     if (!prefs.containsKey(key)) return null;
 

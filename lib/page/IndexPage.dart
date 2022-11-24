@@ -34,12 +34,16 @@ class _IndexPageState extends State<IndexPage> {
 
     util.execAfterOnlyBinding(() {
       wordProvider.initScore();
+
+      double screenWidth = MediaQuery.of(context).size.width;
+      wordProvider.setScreenWidth(screenWidth);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     wordProvider = Provider.of<WordProvider>(context, listen: true);
+
     return WrapScaffold(
       body: Center(
         child: Column(

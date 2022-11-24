@@ -31,18 +31,5 @@ class MyApp extends StatelessWidget {
         },
       ),
     );
-    return ChangeNotifierProvider(
-        create: (_) => WordProvider(),
-        child: MaterialApp(
-          title: 'Real Word',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
-          initialRoute: '/',
-          routes: {
-            IndexPage.routeName: (context) => const IndexPage(),
-            MyHomePage.routeName: (context) => const MyHomePage(),
-          },
-        ));
   }
 }

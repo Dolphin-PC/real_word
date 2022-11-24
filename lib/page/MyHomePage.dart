@@ -19,6 +19,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<dynamic> wordObjList = [];
+  List<CreatedSingleWordType> org_singleWordObjList = [];
   List<CreatedSingleWordType> singleWordObjList = [];
   Util util = Util();
   late WordProvider wordProvider;
@@ -40,28 +41,34 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         wordObjList = dataList;
         singleWordObjList = util.createSingleWord(wordObjList); // 단어 쪼개서 생성하기
+        org_singleWordObjList =
+            util.createSingleWord(wordObjList); // 단어 쪼개서 생성하기
       });
-
-      shuffle();
     });
+    before_shuffle();
+  }
 
-    // showDialog(
-    //   context: context,
-    //   builder: (BuildContext context) {
-    //     return CustomDialog(
-    //       context: context,
-    //       title: '',
-    //       msg: '3초 뒤에 단어가 섞입니다.',
-    //       fn: shuffle,
-    //     );
-    //   },
-    // );
+  void before_shuffle() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return CustomDialog(
+          context: context,
+          title: '',
+          msg: '3초 뒤에 단어가 섞입니다.',
+          fn: shuffle,
+          btnList: {},
+        );
+      },
+    );
   }
 
   void shuffle() {
-    Timer(Duration(seconds: 0), () {
+    wordProvider.stopStage();
+    Timer(const Duration(seconds: 3), () {
       setState(() {
-        // util.shuffle(singleWordObjList); // 단어 위치 변경
+        util.shuffle(singleWordObjList); // 단어 위치 변경
         wordProvider.initStage(wordObjList, singleWordObjList);
       });
     });
@@ -99,8 +106,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void retry() {
     setState(() {
+      singleWordObjList = [...org_singleWordObjList];
       wordProvider.retry();
-      shuffle();
+      before_shuffle();
     });
   }
 
@@ -137,13 +145,9 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           Align(
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: util.renderText(
-                  singleWordObjList, wordProvider.getSingleWordCnt()),
-            ),
-          ),
+              alignment: Alignment.center,
+              child: util.renderWord(singleWordObjList,
+                  wordProvider.getSingleWordCnt(), wordProvider.screenWidth)),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(

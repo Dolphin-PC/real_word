@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:real_word/enum.dart';
 import 'package:real_word/util/util.dart';
 
 import '../util/structure.dart';
@@ -13,22 +14,72 @@ class WordProvider extends ChangeNotifier {
   int _correctCnt = 0;
   bool isWordCorrect = false;
   bool isAllCorrect = false;
+  bool _isAlreadyAllCorrect = false;
 
   int correctScore = 0;
 
+  late double screenWidth;
+  GAME_STATUS gameStatus = GAME_STATUS.STOP;
+
   int getSingleWordCnt() => _singleWordCount;
+  void setSingleWordCnt(int cnt) => _singleWordCount = cnt;
+  void setScreenWidth(double width) {
+    screenWidth = width;
+    notifyListeners();
+  }
+
+  /* 메인 로직 */
   String getClickedWordsString() {
     if (_clickedSingleWords.isEmpty) return '';
     return _clickedSingleWords.map((_) => _.getWord()).join("");
   }
 
-  void setSingleWordCnt(int cnt) => _singleWordCount = cnt;
-  void setCorrectWordList(List<dynamic> list) {
-    print(list);
-    _correctWordList = list;
-  }
-
   void wordClick(CreatedSingleWordType wordObj) {
+    bool isAlreadyClicked(CreatedSingleWordType newWordObj) {
+      for (CreatedSingleWordType clickedWord in _clickedSingleWords) {
+        if (clickedWord == newWordObj) return true;
+      }
+      return false;
+    }
+
+    bool checkWordCorrect() {
+      String clickedWord = getClickedWordsString();
+      print(_correctWordList);
+      print(clickedWord);
+      return _correctWordList.contains(clickedWord);
+    }
+
+    void clean() {
+      _clickedSingleWords = [];
+    }
+
+    void correctFn() {
+      print('맞춤');
+      for (CreatedSingleWordType clickedWord in _clickedSingleWords) {
+        clickedWord.setIsCorrect(true);
+      }
+      _correctCnt++;
+
+      if (_correctCnt == _correctWordList.length) {
+        isAllCorrect = true;
+        if (_isAlreadyAllCorrect == false) {
+          _isAlreadyAllCorrect = true;
+          correctScore += _correctCnt;
+          util.setSharedData<int>('score', correctScore);
+        }
+      }
+
+      notifyListeners();
+    }
+
+    void inCorrectFn() {
+      print('못맞춤');
+      for (CreatedSingleWordType clickedWord in _clickedSingleWords) {
+        clickedWord.setIsClick(false);
+      }
+    }
+
+    // -------------
     if (isAlreadyClicked(wordObj)) {
       // 이미 클릭된 단어 빼기
       _clickedSingleWords.removeWhere((ele) => ele == wordObj);
@@ -49,47 +100,6 @@ class WordProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool isAlreadyClicked(CreatedSingleWordType newWordObj) {
-    for (CreatedSingleWordType clickedWord in _clickedSingleWords) {
-      if (clickedWord == newWordObj) return true;
-    }
-    return false;
-  }
-
-  bool checkWordCorrect() {
-    String clickedWord = getClickedWordsString();
-    print(_correctWordList);
-    print(clickedWord);
-    return _correctWordList.contains(clickedWord);
-  }
-
-  void clean() {
-    _clickedSingleWords = [];
-  }
-
-  void correctFn() {
-    print('맞춤');
-    for (CreatedSingleWordType clickedWord in _clickedSingleWords) {
-      clickedWord.setIsCorrect(true);
-    }
-    _correctCnt++;
-    correctScore++;
-    print(correctScore);
-    util.setSharedData<int>('score', correctScore);
-    if (_correctCnt == _correctWordList.length) {
-      isAllCorrect = true;
-    }
-
-    notifyListeners();
-  }
-
-  void inCorrectFn() {
-    print('못맞춤');
-    for (CreatedSingleWordType clickedWord in _clickedSingleWords) {
-      clickedWord.setIsClick(false);
-    }
-  }
-
   void retry() {
     _clickedSingleWords = [];
 
@@ -101,6 +111,7 @@ class WordProvider extends ChangeNotifier {
       singleWordObjInstance.setIsCorrect(false);
       singleWordObjInstance.setIsClick(false);
     }
+    notifyListeners();
   }
 
   void nextLevel() {
@@ -109,10 +120,7 @@ class WordProvider extends ChangeNotifier {
     _correctCnt = 0;
     isWordCorrect = false;
     isAllCorrect = false;
-  }
-
-  void setSingleWordObjList(List<CreatedSingleWordType> singleWordObjList) {
-    _singleWordObjInstanceList = singleWordObjList;
+    notifyListeners();
   }
 
   void initScore() async {
@@ -120,11 +128,22 @@ class WordProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void initStage(List<dynamic> wordObjList,
-      List<CreatedSingleWordType> singleWordObjList) {
-    setCorrectWordList(wordObjList);
-    setSingleWordObjList(singleWordObjList);
+  void initStage(
+    List<dynamic> wordObjList,
+    List<CreatedSingleWordType> singleWordObjList,
+  ) {
+    _correctWordList = wordObjList;
+    _singleWordObjInstanceList = singleWordObjList;
 
+    gameStatus = GAME_STATUS.START;
     retry();
+    notifyListeners();
+  }
+
+  void stopStage() {
+    print('stop');
+    gameStatus = GAME_STATUS.STOP;
+
+    notifyListeners();
   }
 }

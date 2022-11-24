@@ -24,7 +24,8 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/
+    - assets/data/org_data.json
+    - assets/data/org_data_key_list.json
   fonts:
     - family: NotoSansKR
       fonts:

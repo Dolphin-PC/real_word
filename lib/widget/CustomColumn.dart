@@ -10,16 +10,7 @@ class CustomColumn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
-        Container(
-          margin: const EdgeInsets.all(10),
-          alignment: Alignment.center,
-          width: 50,
-          height: 50,
-          color: Colors.lightGreen[50],
-          child: WordButton(createdWordType: word),
-        ),
-      ],
+      children: [WordButton(createdWordType: word)],
     );
   }
 }

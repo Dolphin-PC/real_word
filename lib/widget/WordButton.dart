@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:real_word/provider/CommProvider.dart';
 import 'package:real_word/provider/WordProvider.dart';
 
+import '../enum.dart';
 import '../util/structure.dart';
 
 class WordButton extends StatefulWidget {
-  WordButton({Key? key, required this.createdWordType}) : super(key: key);
+  const WordButton({Key? key, required this.createdWordType}) : super(key: key);
 
   final CreatedSingleWordType createdWordType;
 
@@ -16,7 +16,6 @@ class WordButton extends StatefulWidget {
 
 class _WordButtonState extends State<WordButton> {
   late WordProvider wordProvider;
-  late CommProvider commProvider;
 
   void onClick() {
     setState(() {
@@ -27,24 +26,34 @@ class _WordButtonState extends State<WordButton> {
 
   @override
   Widget build(BuildContext context) {
-    wordProvider = Provider.of<WordProvider>(context, listen: false);
-    commProvider = Provider.of<CommProvider>(context, listen: false);
-    return SizedBox(
-      width: double.infinity,
-      height: double.infinity,
-      child: ElevatedButton(
-        onPressed: widget.createdWordType.isCorrect() ? null : onClick,
-        style: ElevatedButton.styleFrom(
-          primary: widget.createdWordType.isClick()
-              ? Colors.blueAccent
-              : Colors.grey,
-        ),
-        child: Text(
-          widget.createdWordType.getWord(),
-          style: const TextStyle(
-              fontFamily: 'ComicNeue',
-              fontWeight: FontWeight.w700,
-              fontSize: 24.0),
+    wordProvider = Provider.of<WordProvider>(context, listen: true);
+
+    return Container(
+      margin: const EdgeInsets.all(10),
+      alignment: Alignment.center,
+      width: 50,
+      height: 50,
+      color: Colors.lightGreen[50],
+      child: SizedBox(
+        width: double.infinity,
+        height: double.infinity,
+        child: ElevatedButton(
+          onPressed: widget.createdWordType.isCorrect() ||
+                  wordProvider.gameStatus == GAME_STATUS.STOP
+              ? null
+              : onClick,
+          style: ElevatedButton.styleFrom(
+            primary: widget.createdWordType.isClick()
+                ? Colors.blueAccent
+                : Colors.grey,
+          ),
+          child: Text(
+            widget.createdWordType.getWord(),
+            style: const TextStyle(
+                fontFamily: 'ComicNeue',
+                fontWeight: FontWeight.w700,
+                fontSize: 24.0),
+          ),
         ),
       ),
     );
