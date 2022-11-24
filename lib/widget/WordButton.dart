@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:real_word/provider/CommProvider.dart';
 import 'package:real_word/provider/WordProvider.dart';
 
 import '../util/structure.dart';
@@ -15,6 +16,7 @@ class WordButton extends StatefulWidget {
 
 class _WordButtonState extends State<WordButton> {
   late WordProvider wordProvider;
+  late CommProvider commProvider;
 
   void onClick() {
     setState(() {
@@ -26,6 +28,7 @@ class _WordButtonState extends State<WordButton> {
   @override
   Widget build(BuildContext context) {
     wordProvider = Provider.of<WordProvider>(context, listen: false);
+    commProvider = Provider.of<CommProvider>(context, listen: false);
     return SizedBox(
       width: double.infinity,
       height: double.infinity,

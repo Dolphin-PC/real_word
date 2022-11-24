@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'dart:core';
 import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:real_word/util/structure.dart';
 import 'package:real_word/widget/CustomColumn.dart';
 import 'package:real_word/widget/CustomRow.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Util {
   Future<List<dynamic>> getWordFromJson(
@@ -100,5 +102,61 @@ class Util {
       elements[start + pos] = elements[start + length];
       elements[start + length] = tmp1;
     }
+  }
+
+  Future<bool> isSharedData(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.containsKey(key);
+  }
+
+  Future<T?> getSharedData<T>(
+    String key,
+  ) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey(key)) return null;
+
+    switch (T) {
+      case bool:
+        return prefs.getBool(key) as T;
+      case String:
+        return prefs.getString(key) as T;
+      case int:
+        return prefs.getInt(key) as T;
+      case double:
+        return prefs.getDouble(key) as T;
+      case List<String>:
+        return prefs.getStringList(key) as T;
+      case Object:
+        return prefs.get(key) as T;
+    }
+    return null;
+  }
+
+  void setSharedData<T>(String key, T value) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    switch (T) {
+      case bool:
+        prefs.setBool(key, value as bool);
+        break;
+      case String:
+        prefs.setString(key, value as String);
+        break;
+      case int:
+        prefs.setInt(key, value as int);
+        break;
+      case double:
+        prefs.setDouble(key, value as double);
+        break;
+      case List<String>:
+        prefs.setStringList(key, value as List<String>);
+        break;
+    }
+  }
+
+  void execAfterOnlyBinding(Function fn) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fn();
+    });
   }
 }

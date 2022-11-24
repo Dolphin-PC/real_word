@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:real_word/util/util.dart';
 
 import '../util/structure.dart';
 
 class WordProvider extends ChangeNotifier {
+  Util util = Util();
   List<dynamic> _correctWordList = [];
   List<CreatedSingleWordType> _singleWordObjInstanceList = [];
   List<CreatedSingleWordType> _clickedSingleWords = [];
@@ -11,6 +13,8 @@ class WordProvider extends ChangeNotifier {
   int _correctCnt = 0;
   bool isWordCorrect = false;
   bool isAllCorrect = false;
+
+  int correctScore = 0;
 
   int getSingleWordCnt() => _singleWordCount;
   String getClickedWordsString() {
@@ -69,9 +73,14 @@ class WordProvider extends ChangeNotifier {
       clickedWord.setIsCorrect(true);
     }
     _correctCnt++;
+    correctScore++;
+    print(correctScore);
+    util.setSharedData<int>('score', correctScore);
     if (_correctCnt == _correctWordList.length) {
       isAllCorrect = true;
     }
+
+    notifyListeners();
   }
 
   void inCorrectFn() {
@@ -104,5 +113,10 @@ class WordProvider extends ChangeNotifier {
 
   void setSingleWordObjList(List<CreatedSingleWordType> singleWordObjList) {
     _singleWordObjInstanceList = singleWordObjList;
+  }
+
+  void initScore() async {
+    correctScore = await util.getSharedData<int>('score') ?? 0;
+    notifyListeners();
   }
 }

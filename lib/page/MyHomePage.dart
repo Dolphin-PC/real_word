@@ -29,7 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
 
     // build 때 까지 기다렸다가 1번만 실행
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    util.execAfterOnlyBinding(() {
       wordInit();
     });
   }
@@ -115,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
     wordProvider = Provider.of<WordProvider>(context, listen: true);
     args = ModalRoute.of(context)!.settings.arguments;
 
-    isAllCorrect();
+    wordProvider.isAllCorrect ? isAllCorrect() : null;
     return WrapScaffold(
       body: Stack(
         children: [

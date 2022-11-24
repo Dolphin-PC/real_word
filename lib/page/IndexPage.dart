@@ -18,6 +18,9 @@ class _IndexPageState extends State<IndexPage> {
   Util util = Util();
   List<String> wordKeyList = ['0'];
   String wordKeyValue = '0';
+  int? score;
+
+  late WordProvider wordProvider;
 
   @override
   void initState() {
@@ -28,17 +31,21 @@ class _IndexPageState extends State<IndexPage> {
         wordKeyValue = wordKeyList.first;
       });
     });
+
+    util.execAfterOnlyBinding(() {
+      wordProvider.initScore();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    WordProvider wordProvider =
-        Provider.of<WordProvider>(context, listen: false);
+    wordProvider = Provider.of<WordProvider>(context, listen: true);
     return WrapScaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text('내가 맞힌 단어 수 : ${wordProvider.correctScore}'),
             DropdownButton<String>(
               value: wordKeyValue,
               items: wordKeyList.map<DropdownMenuItem<String>>((String value) {
