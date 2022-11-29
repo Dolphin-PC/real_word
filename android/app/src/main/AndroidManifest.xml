@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.real_word">
    <application
-        android:label="real_word"
+        android:label="Real Word"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
