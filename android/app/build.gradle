@@ -18,7 +18,7 @@ if (flutterVersionCode == null) {
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
+    flutterVersionName = '1.0.0'
 }
 
 apply plugin: 'com.android.application'
@@ -47,8 +47,8 @@ android {
         minSdkVersion 23
         targetSdkVersion 33
 
-        versionCode 1
-        versionName "1.0"
+        versionName flutterVersionName
+        versionCode flutterVersionCode
     }
 
     signingConfigs {
