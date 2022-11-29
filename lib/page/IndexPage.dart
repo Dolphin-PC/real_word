@@ -45,6 +45,7 @@ class _IndexPageState extends State<IndexPage> {
     wordProvider = Provider.of<WordProvider>(context, listen: true);
 
     return WrapScaffold(
+      isBottom: true,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
