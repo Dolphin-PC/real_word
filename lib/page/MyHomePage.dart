@@ -55,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (BuildContext context) {
         return CustomDialog(
           context: context,
-          title: '',
+          title: '게임시작',
           msg: '3초 뒤에 단어가 섞입니다.',
           fn: shuffle,
           btnList: {},
